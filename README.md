@@ -89,4 +89,13 @@ DashMap dan Singleton bukan pilihan yang saling menggantikan, mereka bekerja ber
 
 #### Reflection Publisher-2
 
+1. Mengapa perlu memisahkan Service dan Repository dari Model?
+Pemisahan ini mengikuti prinsip Single Responsibility. Model harusnya hanya merepresentasikan struktur data. Repository bertanggung jawab atas cara data disimpan/diambil (abstraksi database). Service menangani logika bisnis (seperti validasi atau pengolahan string). Jika digabung, satu file Model akan menjadi sangat besar, sulit diuji (test), dan sulit dikelola jika aplikasi berkembang.
+
+2. Apa yang terjadi jika hanya menggunakan Model?
+Kompleksitas kode akan meledak di dalam satu struct. Sebagai contoh, struct Subscriber harus tahu cara memvalidasi dirinya sendiri, cara menyimpan dirinya ke database, sekaligus cara mengirim notifikasi. Hal ini menyebabkan ketergantungan antar model (tight coupling) yang sangat tinggi, membuat perubahan kecil di satu fitur berisiko merusak fitur lainnya.
+
+3. Manfaat Postman?
+Postman sangat membantu dalam memvalidasi API tanpa harus membuat front-end terlebih dahulu. Fitur seperti Collections membantu mengorganisir berbagai skenario pengujian, dan variabel lingkungan (Environments) mempermudah perpindahan antar server lokal dan produksi.
+
 #### Reflection Publisher-3
