@@ -99,3 +99,12 @@ Kompleksitas kode akan meledak di dalam satu struct. Sebagai contoh, struct Subs
 Postman sangat membantu dalam memvalidasi API tanpa harus membuat front-end terlebih dahulu. Fitur seperti Collections membantu mengorganisir berbagai skenario pengujian, dan variabel lingkungan (Environments) mempermudah perpindahan antar server lokal dan produksi.
 
 #### Reflection Publisher-3
+
+1. Push vs Pull Model
+Tutorial ini menggunakan Push Model. Publisher secara aktif mengirimkan (push) data notifikasi ke setiap subscriber segera setelah terjadi perubahan.
+
+2. Keuntungan Pull Model
+Jika menggunakan Pull Model, keuntungan utamanya adalah subscriber tidak akan "kebanjiran" data jika publisher sangat aktif. Subscriber bisa mengambil data hanya saat mereka siap atau saat mereka aktif saja, sehingga mengurangi beban server subscriber.
+
+3. Multi-threading
+Jika kita tidak menggunakan multi-threading (thread::spawn), program akan menjadi synchronous. Artinya, jika ada 100 subscriber dan satu subscriber memiliki koneksi lambat, proses pembuatan/penghapusan produk akan "macet" menunggu notifikasi terkirim ke subscriber tersebut satu per satu. Pengguna akan merasakan aplikasi yang sangat lambat (lagging).
