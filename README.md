@@ -78,6 +78,15 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-1
 
+1. Interface (Trait) vs Model Struct 
+Dalam pola Observer tradisional (seperti dalam buku Head First), Interface digunakan karena Subscriber bisa berupa objek yang sangat berbeda-beda (misalnya satu mengirim email, satu mengirim SMS, satu memperbarui log). Dalam kasus BambangShop ini, sebuah Model struct sudah cukup karena semua subscriber memiliki perilaku yang seragam. Mereka adalah entitas eksternal yang dihubungi melalui HTTP request ke sebuah URL. Namun, jika ke depannya kita ingin mendukung tipe subscriber yang berbeda (misalnya Internal Dashboard Subscriber yang tidak menggunakan HTTP, atau Mobile Push Notification Subscriber), maka menggunakan Trait di Rust akan menjadi pilihan yang lebih baik untuk menjaga prinsip Open-Closed Principle.
+
+2. Vec (List) vs DashMap (Map)
+Meskipun Vec bisa digunakan untuk menyimpan daftar subscriber, penggunaan DashMap (Map/Dictionary) jauh lebih efisien dan tepat untuk kasus ini karena Keunikan (Uniqueness), DashMap secara otomatis mempermudah kita memastikan bahwa satu url (sebagai key) hanya terdaftar satu kali. Jika menggunakan Vec, kita harus melakukan pengecekan manual (iterasi) setiap kali ingin menambah data agar tidak duplikat. Performa Pencarian & Penghapusan, Pencarian atau penghapusan subscriber berdasarkan url di DashMap memiliki kompleksitas waktu rata-rata O(1), sedangkan pada Vec adalah O(n) karena harus menyisir seluruh list.
+
+3. DashMap vs Singleton Pattern 
+DashMap dan Singleton bukan pilihan yang saling menggantikan, mereka bekerja bersama. Di Rust, variabel statis seperti SUBSCRIBERS yang dibungkus lazy_static! sebenarnya sudah mengimplementasikan konsep Singleton (hanya ada satu instance database di memori selama aplikasi berjalan).Namun, masalah utama di Rust bukan hanya soal Singleton, melainkan Thread Safety. Karena aplikasi Rocket berjalan secara multi-threaded, beberapa thread bisa mencoba mengakses/mengubah daftar subscriber secara bersamaan.Singleton saja tidak menjamin keamanan data dari race condition.Kita tetap membutuhkan DashMap (atau kombinasi Mutex/RwLock dengan HashMap) untuk memastikan bahwa akses konkuren ke data tersebut aman secara memori (thread-safe), sesuai dengan aturan ownership dan borrowing yang ketat di Rust.
+
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
